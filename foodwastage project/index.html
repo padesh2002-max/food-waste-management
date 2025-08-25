@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FreshTrack - Reduce Food Waste, Save Money</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .header {
+        text-align: center;
+        color: white;
+        margin-bottom: 40px;
+        animation: fadeInDown 1s ease-out;
+      }
+
+      .header h1 {
+        font-size: 3rem;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .header p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+      }
+
+      .stats-banner {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 30px;
+        text-align: center;
+        color: white;
+        animation: slideInUp 1s ease-out 0.5s both;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+      }
+
+      .stat-card {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 15px;
+        border-radius: 10px;
+        transition: transform 0.3s ease;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #ffd700;
+      }
+
+      .main-content {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 1s ease-out 1s both;
+      }
+
+      .problem-section {
+        margin-bottom: 40px;
+      }
+
+      .problem-section h2 {
+        color: #e74c3c;
+        font-size: 2rem;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .solution-section {
+        margin-bottom: 40px;
+      }
+
+      .solution-section h2 {
+        color: #27ae60;
+        font-size: 2rem;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .tracker-app {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        border-radius: 20px;
+        padding: 30px;
+        color: white;
+        margin: 30px 0;
+      }
+
+      .tracker-header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .tracker-form {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-group label {
+        margin-bottom: 5px;
+        font-weight: 600;
+      }
+
+      .form-group input,
+      .form-group select {
+        padding: 12px;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        background: rgba(255, 255, 255, 0.9);
+      }
+
+      .add-btn {
+        background: #ffd700;
+        color: #333;
+        padding: 12px 30px;
+        border: none;
+        border-radius: 25px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .add-btn:hover {
+        background: #ffa500;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .food-list {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 20px;
+        margin-top: 20px;
+      }
+
+      .food-item {
+        background: rgba(255, 255, 255, 0.9);
+        color: #333;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 10px;
+        display: flex;
+        justify-content: between;
+        align-items: center;
+        transition: all 0.3s ease;
+      }
+
+      .food-item:hover {
+        transform: translateX(5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .food-info {
+        flex-grow: 1;
+      }
+
+      .food-name {
+        font-weight: 600;
+        font-size: 1.1rem;
+      }
+
+      .food-expiry {
+        font-size: 0.9rem;
+        opacity: 0.7;
+      }
+
+      .expiry-warning {
+        background: #ff6b6b !important;
+        color: white !important;
+      }
+
+      .expiry-critical {
+        background: #e74c3c !important;
+        color: white !important;
+        animation: pulse 2s infinite;
+      }
+
+      .remove-btn {
+        background: #e74c3c;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: background 0.3s ease;
+      }
+
+      .remove-btn:hover {
+        background: #c0392b;
+      }
+
+      .tips-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-top: 30px;
+      }
+
+      .tip-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 25px;
+        border-radius: 15px;
+        transition: transform 0.3s ease;
+      }
+
+      .tip-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      }
+
+      .tip-card h3 {
+        margin-bottom: 15px;
+        color: #ffd700;
+      }
+
+      .impact-calculator {
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        padding: 30px;
+        border-radius: 20px;
+        color: white;
+        text-align: center;
+        margin: 30px 0;
+      }
+
+      .savings-display {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+      }
+
+      .savings-item {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 20px;
+        border-radius: 10px;
+      }
+
+      .savings-number {
+        font-size: 2rem;
+        font-weight: bold;
+        display: block;
+      }
+
+      @keyframes fadeInDown {
+        from {
+          opacity: 0;
+          transform: translateY(-30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes slideInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .header h1 {
+          font-size: 2rem;
+        }
+
+        .main-content {
+          padding: 20px;
+        }
+
+        .tracker-form {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1>🥬 FreshTrack</h1>
+        <p>Reduce Food Waste, Save Money, Help the Planet</p>
+      </header>
+
+      <div class="stats-banner">
+        <h2>🌍 The Global Food Waste Crisis</h2>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-number">1.3B</div>
+            <div>Tons of food wasted annually</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">$1T</div>
+            <div>Economic loss per year</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">10%</div>
+            <div>Of global greenhouse gases</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">828M</div>
+            <div>People go hungry daily</div>
+          </div>
+        </div>
+      </div>
+
+      < class="main-content">
+        <div class="problem-section">
+          <h2>🚨 The Problem</h2>
+          <p>
+            Food waste is one of the most pressing environmental and social
+            issues of our time. While 828 million people go to bed hungry every
+            night, we waste approximately 1/3 of all food produced globally.
+            This waste occurs at every level - from farms to stores to our own
+            kitchens.
+          </p>
+          <br />
+          <p>
+            In households alone, the average family throws away $1,500 worth of
+            food annually. This waste contributes significantly to greenhouse
+            gas emissions, water waste, and landfill overflow. Most of this
+            waste is preventable with better planning and awareness.
+          </p>
+        </div>
+
+        <div class="solution-section">
+          <h2>✅ Our Solution</h2>
+          <p>
+            FreshTrack helps you track your food inventory, monitor expiration
+            dates, and get personalized tips to reduce waste. By being more
+            aware of what you have and when it expires, you can significantly
+            reduce waste while saving money.
+          </p>
+        </div>
+
+        <div class="tracker-app">
+          <div class="tracker-header">
+            <h2>📱 Food Inventory Tracker</h2>
+            <p>Add your food items and track their expiration dates</p>
+          </div>
+
+          <div class="tracker-form">
+            <div class="form-group">
+              <label for="foodName">Food Item</label>
+              <input
+                type="text"
+                id="foodName"
+                placeholder="e.g., Milk, Bread, Apples"
+              />
+            </div>
+            <div class="form-group">
+              <label for="expiryDate">Expiry Date</label>
+              <input type="date" id="expiryDate" />
+            </div>
+            <div class="form-group">
+              <label for="category">Category</label>
+              <select id="category">
+                <option value="dairy">Dairy</option>
+                <option value="meat">Meat & Poultry</option>
+                <option value="vegetables">Vegetables</option>
+                <option value="fruits">Fruits</option>
+                <option value="grains">Grains & Bread</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <button class="add-btn" onclick="addFood()">Add Food Item</button>
+            </div>
+          </div>
+
+          <div class="food-list">
+            <h3>Your Food Inventory</h3>
+            <div id="foodItems">
+              <p style="text-align: center; opacity: 0.7">
+                No items added yet. Start tracking your food!
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="impact-calculator">
+          <h2>💰 Your Impact</h2>
+          <p>See how much money and environmental impact you're saving</p>
+          <div class="savings-display">
+            <div class="savings-item">
+              <span class="savings-number" id="moneySaved">$0</span>
+              <div>Money Saved</div>
+            </div>
+            <div class="savings-item">
+              <span class="savings-number" id="foodSaved">0</span>
+              <div>Items Saved</div>
+            </div>
+            <div class="savings-item">
+              <span class="savings-number" id="co2Saved">0</span>
+              <div>kg CO₂ Prevented</div>
+            </div>
+          </div>
+        </div>
+
+
+        <section class="project-section">
+          <h2>🌱 Our Projects</h2>
+          <div class="project-list">
+            <div class="project-card">
+              <link rel href="https://foodponetlifycom.netlify.app/"></link>
+              <h3>Food Waste Tracker</h3>
+              <p>A web app to help users track and reduce food waste.</p>
+            </div>
+            <div class="project-card">
+              <a href="https://foodponetlifycom.netlify.app/" target="_blank" rel="noopener">
+                <h3>Recipe Generator</h3>
+                <p>Generate recipes based on ingredients you have at home.</p>
+              </a>
+            </div>
+            <div class="project-card">
+              <h3>Community Fridge</h3>
+              <p>A platform to share surplus food with those in need.</p>
+            </div>
+          </div>
+        </section>
+
+        <div class="solution-section">
+          <h2>💡 Smart Tips to Reduce Food Waste</h2>
+          <div class="tips-section">
+            <div class="tip-card">
+              <h3>🛒 Plan Your Shopping</h3>
+              <p>
+                Make a meal plan before shopping and stick to your list. Check
+                what you already have at home to avoid buying duplicates.
+              </p>
+            </div>
+            <div class="tip-card">
+              <h3>🥕 Store Food Properly</h3>
+              <p>
+                Learn how to store different foods correctly. Keep bananas
+                separate from other fruits, store potatoes in dark places, and
+                use airtight containers.
+              </p>
+            </div>
+            <div class="tip-card">
+              <h3>🍳 Use Leftovers Creatively</h3>
+              <p>
+                Transform leftovers into new meals. Yesterday's roasted
+                vegetables can become today's soup or pasta sauce.
+              </p>
+            </div>
+            <div class="tip-card">
+              <h3>📅 First In, First Out</h3>
+              <p>
+                Use older items first. Organize your fridge and pantry so older
+                items are in front and easily visible.
+              </p>
+            </div>
+            <div class="tip-card">
+              <h3>🥶 Freeze Before It's Too Late</h3>
+              <p>
+                Freeze foods that are close to expiry. Many items can be frozen
+                and used later in cooking.
+              </p>
+            </div>
+            <div class="tip-card">
+              <h3>💡 Understand Date Labels</h3>
+              <p>
+                "Best by" doesn't mean "bad after." Use your senses to determine
+                if food is still good to eat.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let foodItems = [];
+      let totalSaved = 0;
+      let itemsSaved = 0;
+
+      function addFood() {
+        const name = document.getElementById("foodName").value;
+        const expiry = document.getElementById("expiryDate").value;
+        const category = document.getElementById("category").value;
+
+        if (!name || !expiry) {
+          alert("Please fill in all fields");
+          return;
+        }
+
+        const foodItem = {
+          id: Date.now(),
+          name: name,
+          expiry: expiry,
+          category: category,
+          dateAdded: new Date().toISOString().split("T")[0],
+        };
+
+        foodItems.push(foodItem);
+        updateFoodList();
+        clearForm();
+      }
+
+      function clearForm() {
+        document.getElementById("foodName").value = "";
+        document.getElementById("expiryDate").value = "";
+        document.getElementById("category").selectedIndex = 0;
+      }
+
+      function removeFood(id, saved = false) {
+        if (saved) {
+          // Calculate savings when food is marked as used/saved
+          const avgPrice = 5; // Average price per food item
+          totalSaved += avgPrice;
+          itemsSaved += 1;
+          updateSavingsDisplay();
+        }
+
+        foodItems = foodItems.filter((item) => item.id !== id);
+        updateFoodList();
+      }
+
+      function updateFoodList() {
+        const container = document.getElementById("foodItems");
+
+        if (foodItems.length === 0) {
+          container.innerHTML =
+            '<p style="text-align: center; opacity: 0.7;">No items added yet. Start tracking your food!</p>';
+          return;
+        }
+
+        container.innerHTML = foodItems
+          .map((item) => {
+            const today = new Date();
+            const expiryDate = new Date(item.expiry);
+            const daysUntilExpiry = Math.ceil(
+              (expiryDate - today) / (1000 * 60 * 60 * 24)
+            );
+
+            let statusClass = "";
+            let statusText = "";
+
+            if (daysUntilExpiry < 0) {
+              statusClass = "expiry-critical";
+              statusText = `Expired ${Math.abs(daysUntilExpiry)} days ago`;
+            } else if (daysUntilExpiry <= 2) {
+              statusClass = "expiry-critical";
+              statusText = `Expires in ${daysUntilExpiry} day${
+                daysUntilExpiry !== 1 ? "s" : ""
+              }`;
+            } else if (daysUntilExpiry <= 5) {
+              statusClass = "expiry-warning";
+              statusText = `Expires in ${daysUntilExpiry} days`;
+            } else {
+              statusText = `Expires in ${daysUntilExpiry} days`;
+            }
+
+            return `
+                    <div class="food-item ${statusClass}">
+                        <div class="food-info">
+                            <div class="food-name">${item.name}</div>
+                            <div class="food-expiry">${item.category} • ${statusText}</div>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="add-btn" style="padding: 5px 10px; font-size: 12px;" onclick="removeFood(${item.id}, true)">Used ✓</button>
+                            <button class="remove-btn" onclick="removeFood(${item.id})">Remove</button>
+                        </div>
+                    </div>
+                `;
+          })
+          .join("");
+      }
+
+      function updateSavingsDisplay() {
+        document.getElementById("moneySaved").textContent = `$${totalSaved}`;
+        document.getElementById("foodSaved").textContent = itemsSaved;
+        document.getElementById("co2Saved").textContent = Math.round(
+          itemsSaved * 2.3
+        ); // Approximate CO2 saved per item
+      }
+
+      // Set minimum date to today
+      document.getElementById("expiryDate").min = new Date()
+        .toISOString()
+        .split("T")[0];
+
+      // Initialize with sample data
+      function initializeSampleData() {
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+
+        const nextWeek = new Date(today);
+        nextWeek.setDate(nextWeek.getDate() + 7);
+
+        foodItems = [
+          {
+            id: 1,
+            name: "Milk",
+            expiry: tomorrow.toISOString().split("T")[0],
+            category: "dairy",
+            dateAdded: today.toISOString().split("T")[0],
+          },
+          {
+            id: 2,
+            name: "Bananas",
+            expiry: nextWeek.toISOString().split("T")[0],
+            category: "fruits",
+            dateAdded: today.toISOString().split("T")[0],
+          },
+        ];
+        updateFoodList();
+      }
+
+      // Initialize the app
+      initializeSampleData();
+    </script>
+  </body>
+</html>
